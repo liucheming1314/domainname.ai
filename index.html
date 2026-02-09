@@ -28,11 +28,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        /* 氛围装饰 */
         body::after {
             content: "";
             position: absolute;
@@ -48,95 +48,89 @@
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 900px;
-            /* 侧边装饰线条 */
+            max-width: 1000px;
             border-left: 2px solid var(--accent);
-            padding: 20px 0 20px 40px;
+            padding: 10px 0 10px 40px;
         }
 
         .label {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.5em;
             color: var(--secondary);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             display: block;
         }
 
         .domain-display {
-            /* 优化：针对长域名的自适应字号 */
-            font-size: clamp(2.2rem, 8vw, 5.5rem);
+            /* 核心优化：调小基础字号，增强自适应能力 */
+            font-size: clamp(1.8rem, 7.5vw, 4.8rem);
             font-weight: 800;
-            line-height: 1.05;
-            margin-bottom: 48px;
-            letter-spacing: -0.03em;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            text-wrap: balance; /* 使多行排版更均匀 */
+            line-height: 1.1;
+            margin-bottom: 40px;
+            letter-spacing: -0.04em;
+            /* 极端长域名强制换行处理 */
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            text-wrap: balance;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .info-box {
-            max-width: 480px;
+            max-width: 500px;
         }
 
         .description {
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1rem;
+            line-height: 1.7;
             color: var(--secondary);
-            margin-bottom: 32px;
+            margin-bottom: 40px;
+            font-weight: 300;
         }
 
         .contact-trigger {
             display: inline-flex;
             flex-direction: column;
             cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .contact-trigger:active {
-            transform: scale(0.98);
+            transition: all 0.3s ease;
         }
 
         .email-text {
-            font-size: 1.6rem;
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
             font-weight: 300;
-            letter-spacing: -0.01em;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border-bottom: 1px solid var(--accent);
-            padding-bottom: 4px;
-            transition: border-color 0.3s;
+            padding-bottom: 6px;
+            transition: all 0.3s;
         }
 
         .contact-trigger:hover .email-text {
             border-color: var(--primary);
+            color: var(--primary);
         }
 
         .badge {
             display: inline-block;
-            font-size: 10px;
+            font-size: 9px;
             background: var(--accent);
             color: var(--secondary);
-            padding: 4px 10px;
-            border-radius: 4px;
-            letter-spacing: 0.1em;
+            padding: 5px 12px;
+            border-radius: 3px;
+            letter-spacing: 0.15em;
             align-self: flex-start;
+            transition: all 0.3s;
         }
 
-        /* 移动端适配 */
         @media (max-width: 600px) {
             .container {
                 border-left: none;
                 border-top: 2px solid var(--accent);
-                padding: 40px 0 0 0;
+                padding: 30px 0 0 0;
             }
             .domain-display {
-                margin-bottom: 32px;
-            }
-            .email-text {
-                font-size: 1.3rem;
+                margin-bottom: 30px;
             }
         }
     </style>
@@ -144,13 +138,13 @@
 <body>
 
     <main class="container">
-        <span class="label">Premium Asset Acquisition</span>
+        <span class="label">Digital Asset for Sale</span>
         
         <h1 class="domain-display" id="display-name">DOMAIN.COM</h1>
         
         <div class="info-box">
             <p class="description">
-                This digital real estate is available for purchase. We invite serious inquiries and professional offers for this unique brand asset.
+                Elevate your presence with this premium domain. We are currently open to serious offers and acquisition inquiries. 
             </p>
             
             <div class="contact-trigger" onclick="copyContact()">
@@ -161,29 +155,46 @@
     </main>
 
     <script>
-        // 1. 获取当前域名并展示
-        const currentHost = window.location.hostname || "DOMAIN.COM";
-        document.getElementById('display-name').innerText = currentHost.toUpperCase();
+        // 获取当前域名并处理显示
+        try {
+            const host = window.location.hostname;
+            // 只有当获取到的不是 localhost 或空时才替换
+            if (host && !host.includes('127.0.0.1')) {
+                document.getElementById('display-name').innerText = host.toUpperCase();
+            }
+        } catch (e) {
+            console.log("Using default display");
+        }
 
-        // 2. 一键复制功能
         function copyContact() {
             const email = document.getElementById('target-email').innerText;
             const status = document.getElementById('copy-status');
             
-            navigator.clipboard.writeText(email).then(() => {
-                status.innerText = "COPIED TO CLIPBOARD";
-                status.style.background = "#ffffff";
-                status.style.color = "#000000";
-                
-                setTimeout(() => {
-                    status.innerText = "CLICK TO COPY EMAIL";
-                    status.style.background = "var(--accent)";
-                    status.style.color = "var(--secondary)";
-                }, 2500);
-            }).catch(err => {
-                // 回退方案：如果浏览器不支持剪贴板API，则打开邮件客户端
-                window.location.href = "mailto:" + email;
-            });
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(email).then(() => {
+                    showSuccess(status);
+                }).catch(() => {
+                    fallbackCopy(email);
+                });
+            } else {
+                fallbackCopy(email);
+            }
+        }
+
+        function showSuccess(el) {
+            el.innerText = "COPIED TO CLIPBOARD";
+            el.style.background = "#ffffff";
+            el.style.color = "#000000";
+            setTimeout(() => {
+                el.innerText = "CLICK TO COPY EMAIL";
+                el.style.background = "var(--accent)";
+                el.style.color = "var(--secondary)";
+            }, 2500);
+        }
+
+        function fallbackCopy(email) {
+            // 兼容性回退：弹出提示或直接跳转邮件
+            window.location.href = "mailto:" + email;
         }
     </script>
 </body>
