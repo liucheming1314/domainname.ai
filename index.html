@@ -7,10 +7,11 @@
     <title>Domain Inquiry</title>
     <style>
         :root {
-            --bg: #0a0a0a;
+            --bg: #050505;
             --primary: #ffffff;
-            --secondary: #666666;
-            --accent: #333333;
+            --secondary: #888888;
+            --accent: #222222;
+            --gradient: linear-gradient(180deg, #ffffff 0%, #777777 100%);
         }
 
         * {
@@ -22,144 +23,166 @@
         body {
             background-color: var(--bg);
             color: var(--primary);
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            padding: 20px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 装饰背景：增加一点氛围感 */
-        body::before {
+        /* 氛围装饰 */
+        body::after {
             content: "";
             position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%);
-            top: 10%;
-            left: 10%;
-            z-index: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
+            pointer-events: none;
         }
 
-        .content {
+        .container {
             position: relative;
-            z-index: 1;
-            width: 90%;
-            max-width: 800px;
-            padding: 40px;
-            border-left: 1px solid var(--accent); /* 侧边线条排版 */
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            /* 侧边装饰线条 */
+            border-left: 2px solid var(--accent);
+            padding: 20px 0 20px 40px;
         }
 
         .label {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.4em;
             color: var(--secondary);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: block;
         }
 
         .domain-display {
-            font-size: clamp(3rem, 10vw, 6rem);
+            /* 优化：针对长域名的自适应字号 */
+            font-size: clamp(2.2rem, 8vw, 5.5rem);
             font-weight: 800;
-            line-height: 0.9;
-            margin-bottom: 40px;
-            letter-spacing: -0.04em;
-            background: linear-gradient(180deg, #fff 0%, #666 100%);
+            line-height: 1.05;
+            margin-bottom: 48px;
+            letter-spacing: -0.03em;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-wrap: balance; /* 使多行排版更均匀 */
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .offer-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .info-box {
+            max-width: 480px;
         }
 
         .description {
             font-size: 1.1rem;
-            color: var(--secondary);
-            max-width: 400px;
             line-height: 1.6;
+            color: var(--secondary);
+            margin-bottom: 32px;
         }
 
-        .email-wrapper {
-            cursor: pointer;
+        .contact-trigger {
             display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-            group: hover;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s ease;
         }
 
-        .email-address {
-            font-size: 1.5rem;
+        .contact-trigger:active {
+            transform: scale(0.98);
+        }
+
+        .email-text {
+            font-size: 1.6rem;
             font-weight: 300;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
             border-bottom: 1px solid var(--accent);
-            padding-bottom: 5px;
-            transition: all 0.3s ease;
+            padding-bottom: 4px;
+            transition: border-color 0.3s;
         }
 
-        .email-wrapper:hover .email-address {
-            color: #aaa;
-            border-bottom-color: var(--primary);
+        .contact-trigger:hover .email-text {
+            border-color: var(--primary);
         }
 
-        .copy-hint {
+        .badge {
+            display: inline-block;
             font-size: 10px;
             background: var(--accent);
-            padding: 4px 8px;
+            color: var(--secondary);
+            padding: 4px 10px;
             border-radius: 4px;
-            opacity: 0.6;
-            transition: opacity 0.3s;
+            letter-spacing: 0.1em;
+            align-self: flex-start;
         }
 
-        /* 响应式调整 */
+        /* 移动端适配 */
         @media (max-width: 600px) {
-            .content { border-left: none; border-top: 1px solid var(--accent); padding: 40px 10px; }
+            .container {
+                border-left: none;
+                border-top: 2px solid var(--accent);
+                padding: 40px 0 0 0;
+            }
+            .domain-display {
+                margin-bottom: 32px;
+            }
+            .email-text {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="content">
-        <span class="label">Premium Domain For Sale</span>
-        <h1 class="domain-display" id="domain-name">DOMAINNAME.AI</h1>
+    <main class="container">
+        <span class="label">Premium Asset Acquisition</span>
         
-        <div class="offer-section">
+        <h1 class="domain-display" id="display-name">DOMAIN.COM</h1>
+        
+        <div class="info-box">
             <p class="description">
-                Elevate your brand with this exclusive digital asset. We are currently accepting serious offers.
+                This digital real estate is available for purchase. We invite serious inquiries and professional offers for this unique brand asset.
             </p>
             
-            <div class="email-wrapper" onclick="copyEmail()">
-                <span class="email-address" id="email">1@g.team</span>
-                <span class="copy-hint" id="copy-text">CLICK TO COPY</span>
+            <div class="contact-trigger" onclick="copyContact()">
+                <span class="email-text" id="target-email">yourname@example.com</span>
+                <span class="badge" id="copy-status">CLICK TO COPY EMAIL</span>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // 自动设置当前域名
-        const hostname = window.location.hostname || "DOMAIN.COM";
-        document.getElementById('domain-name').innerText = hostname.toUpperCase();
+        // 1. 获取当前域名并展示
+        const currentHost = window.location.hostname || "DOMAIN.COM";
+        document.getElementById('display-name').innerText = currentHost.toUpperCase();
 
-        // 复制邮箱功能
-        function copyEmail() {
-            const email = document.getElementById('email').innerText;
-            const hint = document.getElementById('copy-text');
+        // 2. 一键复制功能
+        function copyContact() {
+            const email = document.getElementById('target-email').innerText;
+            const status = document.getElementById('copy-status');
             
             navigator.clipboard.writeText(email).then(() => {
-                hint.innerText = "COPIED!";
-                hint.style.background = "#fff";
-                hint.style.color = "#000";
+                status.innerText = "COPIED TO CLIPBOARD";
+                status.style.background = "#ffffff";
+                status.style.color = "#000000";
                 
                 setTimeout(() => {
-                    hint.innerText = "CLICK TO COPY";
-                    hint.style.background = "var(--accent)";
-                    hint.style.color = "var(--primary)";
-                }, 2000);
+                    status.innerText = "CLICK TO COPY EMAIL";
+                    status.style.background = "var(--accent)";
+                    status.style.color = "var(--secondary)";
+                }, 2500);
+            }).catch(err => {
+                // 回退方案：如果浏览器不支持剪贴板API，则打开邮件客户端
+                window.location.href = "mailto:" + email;
             });
         }
     </script>
